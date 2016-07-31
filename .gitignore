@@ -91,3 +91,4 @@ ENV/
 # databases
 .sqlite3
 .sqlite[0-9]
+将删除 .idea/vcs.xml
