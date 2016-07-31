@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load table_tags %}
+{% block title %}查看问题列表{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 10px">
+        <h1>Problem List</h1>
+        {% render_table problem %}
+    </div>
+{% endblock %}
