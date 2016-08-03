@@ -93,3 +93,4 @@ media/django-summernote
 # databases
 .sqlite3
 .sqlite2
+.idea/
