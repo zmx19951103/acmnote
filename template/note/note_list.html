@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block title %}
+    笔记列表
+{% endblock %}
+{% block body %}
+{# Load Table  #}
+{% load table_tags %}
+
+
+<div class="container main">
+    <div class="col-md-12 col-lg-12">
+        {% render_table notes %}
+    </div>
+</div>
+<script>
+    $("tr:odd").css("background-color","#E9F1F6");//class为odd的行设置颜色
+    $("tr:even").css("background-color","#ffffff");//class为even的行设置颜色
+</script>
+{% endblock %}

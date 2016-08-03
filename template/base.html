@@ -63,10 +63,9 @@
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
                 <li id="view_problem"><a href="{% url 'problem_list_page' %}">题目</a></li>
-                <li id="view_note"><a href="#">笔记</a></li>
+                <li id="view_note"><a href="{% url 'note_list_page' %}">笔记</a></li>
                 <li><a href="#">比赛</a></li>
                 <li><a href="#">小组</a></li>
-                <li><a href="#">排名</a></li>
                 <li><a href="#">帮助</a></li>
             </ul>
             {% if request.user.is_authenticated %}

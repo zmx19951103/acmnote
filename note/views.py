@@ -8,7 +8,19 @@ from util.verification import user_check
 # Create your views here.
 from .forms import ClassicNoteForm
 from problem.models import Problem
-from django.template import RequestContext
+from .tables import ClassicNoteTable
+
+
+def note_list_page(request):
+    """
+    前台的笔记列表
+    """
+    # 正常情况
+    notes = ClassicNoteTable()
+    content = {
+        'notes': notes,
+    }
+    return render(request, 'note/note_list.html', content)
 
 
 def note_page(request, note_id):
