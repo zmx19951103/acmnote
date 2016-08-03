@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}
+    编辑笔记
+{% endblock %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{% load staticfiles %}
+
+
+
+{% block body %}
+{# 下面是datatime的需求 #}
+    {{ form.media }}
+    <div class="container main">
+        <ul class="nav nav-tabs nav-tabs-google">
+            <li role="presentation">
+                <a href="/problem/{{ problem.id }}/">题目</a>
+            </li>
+            <li role="presentation" class="active">
+                <a href="/add/note/{{ problem.id }}/">添加笔记</a>
+            </li>
+        </ul>
+        {% include "problem/_problem_header.html" %}
+        <form method="post" class="form">
+            {% csrf_token %}
+            {% for field in form %}
+                {% if field.label == '笔记内容' %}
+                    {% bootstrap_field field %}
+                {% else %}
+                    <div class="col-md-6 col-lg-6">
+                        {% bootstrap_field field %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+            <div class="col-md-9 col-lg-9">
+                {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                      {% bootstrap_icon "star" %} 确认添加
+                    </button>
+                {% endbuttons %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

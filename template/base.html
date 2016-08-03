@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:image" content="/static/img/index/bg/bg.jpg">
+    <meta name="renderer" content="webkit">
+    <link rel="shortcut icon" href="/static/img/favicon.ico">
+    {# Load the tag library #}
+    {% load bootstrap3 %}
+
+    {# Load CSS and JavaScript #}
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+    {# Display django.contrib.messages as Bootstrap alerts #}
+    {% bootstrap_messages %}
+
+    {% load staticfiles %}
+
+    <title>
+        ACM 笔记本
+    </title>
+
+    <!-- global css begin -->
+
+    <!-- global css end -->
+
+    <!-- custom css begin -->
+    {% block css_block %}{% endblock %}
+    <!-- custom css end -->
+</head>
+
+
+<body>
+
+
+<div id="browser-unsupported" style="display: none">人生苦短, 何必还在用这么老的浏览器~
+    当前网页 <strong>不支持</strong> 你正在使用的浏览器, 为了正常的访问,
+    请 <a href="http://browsehappy.com/">升级你的浏览器</a>。
+</div>
+<script>
+    if(navigator.userAgent.indexOf("MSIE") > -1){
+        document.getElementById("browser-unsupported").removeAttribute("style");
+    }
+</script>
+
+<!-- nav begin -->
+
+<nav class="navbar navbar-masthead navbar-default navbar-static-top">
+    <div class="container">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">ACM Note</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li id="view_problem"><a href="{% url 'problem_list_page' %}">题目</a></li>
+                <li id="view_note"><a href="#">笔记</a></li>
+                <li><a href="#">比赛</a></li>
+                <li><a href="#">小组</a></li>
+                <li><a href="#">排名</a></li>
+                <li><a href="#">帮助</a></li>
+            </ul>
+            {% if request.user.is_authenticated %}
+                <ul class="nav navbar-nav navbar-right">
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                           aria-expanded="false">
+                            {{ request.user.username }}
+
+                            <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {% if request.user.Myuser.admin_type > 0 %}
+                                <li><a href="#">后台管理</a></li>
+                                <li role="separator" class="divider"></li>
+                            {% endif %}
+                            <li><a href="#">我的主页</a></li>
+                            <li><a href="#">我的提交</a></li>
+                            <li><a href="#">设置</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/logout/">退出</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            {% else %}
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/login/">
+                            登录
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/signup/">
+                            注册
+                        </a>
+                    </li>
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+<!-- nav end -->
+
+<!-- custom body begin -->
+{% block body %}
+{% endblock %}
+<!-- custom body end -->
+
+{% block js_block %}{% endblock %}
+<!-- footer -->
+<footer class="footer" role="contentinfo">
+    <hr>
+    <div class="container">
+        <p class="text-center"><strong>USTB-CS</strong></p>
+        <p class="text-center">©All rights reserved</p>
+        <h5 class="text-center"> Powered by&nbsp;<a href="http://jingwei.site/">CrazyX</a></h5>
+    </div>
+</footer>
+<!-- /.footer-->
+</body>
+</html>

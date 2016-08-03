@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ problem.title }}
+{% endblock %}
+{% block body %}
+    <div class="container main">
+        <ul class="nav nav-tabs nav-tabs-google">
+            <li role="presentation" class="active">
+                <a href="/problem/{{ problem.id }}/">题目</a>
+            </li>
+            {% if status == 1 %}
+                <li role="presentation">
+                    <a href="/add/note/{{ problem.id }}/">添加笔记</a>
+                </li>
+            {% elif status == 2 %}
+                <li role="presentation">
+                    <a href="/note/{{ note.id }}/">我的笔记</a>
+                </li>
+            {% endif %}
+
+        </ul>
+        {% include "problem/_problem_header.html" %}
+        <div>
+            {% include "problem/_problem_main_info.html" %}
+        </div>
+        <div>
+            {% include "problem/_problem_bottom.html" %}
+        </div>
+    </div>
+{% endblock %}
+{% block js_block %}
+    {% include "_mathjax_js.html" %}
+{% endblock %}

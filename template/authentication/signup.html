@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}注册{% endblock %}
+
+{# Load the tag library #}
+{% load bootstrap3 %}
+
+{# Display django.contrib.messages as Bootstrap alerts #}
+{% bootstrap_messages %}
+
+{% load staticfiles %}
+
+{% block body %}
+<div class="container main">
+        <div class="col-md-6 col-md-offset-3">
+            <h2 class="text-center">用户注册</h2>
+            <form method="post" class="form">
+                {% csrf_token %}
+                {% for fields in form %}
+                    {%if fields.label == '验证码' %}
+                        {% bootstrap_label fields.label %}
+                        &nbsp;&nbsp;<img src="/captcha/" id="captcha-img"><small><p></p></small>
+                        {% bootstrap_field fields show_label=False %}
+                    {% else %}
+                        {% bootstrap_field fields%}
+                    {% endif %}
+                {% endfor %}
+               <center>
+                  {% buttons %}
+                    <button type="submit" class="btn btn-primary">
+                      {% bootstrap_icon "star" %} 提交
+                    </button>
+                  {% endbuttons %}
+               </center>
+
+            </form>
+        </div>
+</div>
+{% endblock %}

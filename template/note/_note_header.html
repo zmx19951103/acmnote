@@ -1,0 +1,9 @@
+<h2 class="text-center">{{note.problem.oj_all}}:{{ note.problem.title }}</h2>
+
+<p class="text-muted text-center">
+    发布时间: {{ note.pub_time }}&nbsp;&nbsp;
+    {% if note.update_time %}最后更新: {{ note.update_time }}&nbsp;&nbsp;{% endif %}
+    作者： {{note.author.all_name}}&nbsp;&nbsp;
+    {% if note.ac %}AC时间：{{ note.ac_time }}&nbsp;&nbsp;{% endif %}
+    {% if note.difficulty %}难度： {{ note.difficulty }}&nbsp;&nbsp;{% endif %}
+</p>

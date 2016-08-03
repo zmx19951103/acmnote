@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ note.problem.title }}
+{% endblock %}
+
+{% block body %}
+    <div class="container main">
+        <ul class="nav nav-tabs nav-tabs-google">
+            <li role="presentation" class="active">
+                <a href="/note/{{ note.id }}/">题目笔记</a>
+            </li>
+            {% if editable %}
+            <li role="presentation">
+                <a href="/edit/note/{{ note.id }}/">编辑</a>
+            </li>
+            {% endif %}
+        </ul>
+        {% include "note/_note_header.html" %}
+        <div class="problem-section">
+            {% autoescape off %}
+                {{note.content}}
+            {% endautoescape %}
+        </div>
+    </div>
+{% endblock %}
+{% block js_block %}
+    {% include "_mathjax_js.html" %}
+{% endblock %}
