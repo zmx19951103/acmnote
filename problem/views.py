@@ -17,6 +17,7 @@ def problem_list_page(request):
     # 正常情况
     problem = Problem.objects.filter(visible=True)
     tag_text = request.GET.get("tag", None)
+    tag = None
     if tag_text:
         try:
             tag = ProblemTag.objects.get(name=tag_text)
@@ -27,7 +28,7 @@ def problem_list_page(request):
     tags = ProblemTag.objects.annotate(problem_number=Count("problem")).filter(problem_number__gt=0).order_by(
         "-problem_number")
     return render(request, 'problem/problem_list.html',
-                  {'problem': problems, 'tags': tags})
+                  {'problem': problems, 'tags': tags, 'tag': tag})
 
 
 def problem_page(request, problem_id):

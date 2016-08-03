@@ -31,9 +31,10 @@ def signup(request):
             user.save()
             my_user = MyUser(user=user, real_name=real_name, admin_type=admin_type)
             my_user.save()
-            # return redirect('authentication.views.login', permanent=True)
-            form = LoginForm()
-            return render(request, 'authentication/login.html', {'form': form, 'info': '注册成功，请登陆！'})
+            return redirect('authentication.views.login', permanent=True, )
+            # 采取下面这种方式登陆之后会因为next再跳转回注册页面
+            # form = LoginForm()
+            #return render(request, 'authentication/login.html', {'form': form, 'info': '注册成功，请登陆！'})
         else:
             return render(request, 'authentication/signup.html', {'form': form})
 
@@ -52,6 +53,7 @@ def login(request):
         if form.is_valid():
             auth_login(request, form.get_user())
             return HttpResponseRedirect(next_page)
+            # 这样在注册成功之后的跳转会出问题
         else:
             return render(request, 'authentication/login.html', {'form': form, 'next': next_page})
     else:

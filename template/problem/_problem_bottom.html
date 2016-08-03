@@ -12,7 +12,7 @@
             {% if status > 0 %}
                 <div class="alert alert-info alert-dismissible" role="alert">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <strong>Heads up!</strong> No note are available.Try to <a href="#" class="alert-link">add one</a>?
+                <strong>Heads up!</strong> No note are available.Try to <a href="/add/note/{{ problem.id }}/" class="alert-link">add one</a>?
                 </div>
             {% endif %}
         {% else %}
