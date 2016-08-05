@@ -20,7 +20,6 @@ from util.captcha.views import show_captcha
 from django.conf.urls.static import static
 from django.conf import settings
 
-
 urlpatterns = [
     url(r'^summernote/', include('django_summernote.urls')),
 
@@ -34,6 +33,8 @@ urlpatterns = [
     url(r'', include('announcement.urls')),
     url(r'', include('authentication.urls')),
     url(r'', include('note.urls')),
+
+    # test for myself table columns
 ]
 
 if settings.DEBUG:
