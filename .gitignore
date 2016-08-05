@@ -91,9 +91,9 @@ ENV/
 media/django-summernote
 
 # Ignore the default SQLite database.
-*.sqlite3
-*.sqlite3-journal
+# *.sqlite3
+# *.sqlite3-journal
 .project
 .DS_Store
-.idea
+
 .secret
