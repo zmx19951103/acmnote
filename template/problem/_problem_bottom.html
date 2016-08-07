@@ -1,3 +1,4 @@
+{% load humanize %}
 <h3> 标签 <button class="btn btn-danger" id="btn_tag">Toggle</button> </h3>
 <div id="tags" class="row" style="line-height:420%">
     {% if problem.get_tags %}
@@ -17,22 +18,22 @@
             {% endif %}
         {% else %}
             <div class="list-group">
-            {% for note in problem.get_notes|dictsort:"update_time" %}
+            {% for note in problem.get_notes|dictsortreversed:"update_time" %}
                 {% if note.author.user == user %}
                     <a href="/note/{{note.pk}}" class="list-group-item list-group-item-danger">
-                        <span class="badge">{{note.update_time}}</span>
+                        <span class="badge">{{note.update_time | naturaltime }}</span>
                         * {{ note.author.user.username }}({{ note.author.real_name }}):
                         {{note.text}}
                     </a>
                 {% elif forloop.counter|divisibleby:"2" %}
                     <a href="/note/{{note.pk}}" class="list-group-item list-group-item-info">
-                        <span class="badge">{{note.update_time}}</span>
+                        <span class="badge">{{note.update_time | naturaltime }}</span>
                         * {{ note.author.user.username }}({{ note.author.real_name }}):
                         {{note.text}}
                     </a>
                 {% else %}
                     <a href="/note/{{note.pk}}" class="list-group-item list-group-item-success">
-                        <span class="badge">{{note.update_time}}</span>
+                        <span class="badge">{{note.update_time | naturaltime }}</span>
                         * {{ note.author.user.username }}({{ note.author.real_name }}):
                         {{note.text}}
                     </a>

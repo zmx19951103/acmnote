@@ -7,6 +7,27 @@ from util.dehtml import de_html
 from django.utils.timezone import now
 
 
+class NoteTag(models.Model):
+    # 名字
+    name = models.CharField('标签', max_length=30, unique=True)
+    # 创建时间
+    create_time = models.DateTimeField('创建时间', auto_now_add=True)
+    # 创建用户
+    create_user = models.ForeignKey(MyUser)
+
+    @property
+    def get_rk(self):
+        p = self.classicnote_set.all()
+        n = len(p)
+        return 200-150/(n+1)
+
+    class Meta:
+        db_table = "note_tag"
+
+    def __str__(self):
+        return self.name
+
+
 class AbstractNote(models.Model):
     # 对应问题
     problem = models.ForeignKey(Problem)
@@ -56,6 +77,11 @@ class ClassicNote(AbstractNote):
     # 难度系数 1-10
     ac_time = models.DateTimeField(blank=True, null=True)
     difficulty = models.IntegerField(blank=True, null=True)
+    tags = models.ManyToManyField(NoteTag)
+
+    @property
+    def get_tags(self):
+        return self.tags.all()
 
     @property
     def ac(self):

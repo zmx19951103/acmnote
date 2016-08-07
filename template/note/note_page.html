@@ -21,8 +21,33 @@
                 {{note.content}}
             {% endautoescape %}
         </div>
+        <h3> 标签 <button class="btn btn-danger" id="btn_tag">Toggle</button> </h3>
+        <div id="tags" class="row" style="line-height:420%">
+            {% if note.get_tags %}
+                {% for tag in note.get_tags %}
+                    <span style="margin-left:20px"><a style='font-size:{{tag.get_rk}}%'>{{tag.name}}</a></span>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 {% endblock %}
 {% block js_block %}
+<script type="text/javascript">
+$(document).ready(function(){
+  $('#tags').hide();
+});
+</script>
+<script type="text/javascript">
+$(function(){
+  $('#btn_tag').click(function(){
+    if($('#tags').is(':hidden')){
+      $('#tags').show();
+    }
+    else{
+      $('#tags').hide();
+    }
+  })
+})
+</script>
     {% include "_mathjax_js.html" %}
 {% endblock %}

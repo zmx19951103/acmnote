@@ -10,6 +10,28 @@ from .forms import ClassicNoteForm
 from problem.models import Problem
 from .tables import ClassicNoteTable
 
+from dal import autocomplete
+from .models import NoteTag
+
+
+class NoteTagAutoComplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        if not self.has_add_permission:
+            return NoteTag.objects.none()
+        qs = NoteTag.objects.all()
+        if self.q:
+            qs = qs.filter(name__istartswith=self.q)
+        return qs
+
+    def create_object(self, text):
+        """Create an object given a text."""
+        if not self.has_add_permission:
+            raise PermissionDenied
+        user = self.request.user if self.request.user.is_authenticated() else None
+        my_user = MyUser.objects.get(user=user) if user else None
+        return self.get_queryset().create(**{self.create_field: text,
+                                             'create_user': my_user})
+
 
 def note_list_page(request):
     """
