@@ -23,10 +23,13 @@ class NoteTagAutoComplete(autocomplete.Select2QuerySetView):
             qs = qs.filter(name__istartswith=self.q)
         return qs
 
+    def has_add_permission(self, request):
+        return user_check(request.user)
+
     def create_object(self, text):
         """Create an object given a text."""
-        if not self.has_add_permission:
-            raise PermissionDenied
+        print("SSS")
+
         user = self.request.user if self.request.user.is_authenticated() else None
         my_user = MyUser.objects.get(user=user) if user else None
         return self.get_queryset().create(**{self.create_field: text,

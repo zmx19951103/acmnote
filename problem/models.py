@@ -35,18 +35,31 @@ class Problem(models.Model):
     oj_id = models.CharField('OJ题号', max_length=30)
     # 标题
     title = models.CharField('标题', max_length=50)
-    # 描述 富文本形式
+    # 时间限制 考虑到用爬虫爬取题目连单位一起爬取 所以为CharField
+    time_limit = models.CharField('时间限制', max_length=50)
+    # 内存限制  考虑到用爬虫爬取题目连单位一起爬取 所以为CharField 连单位一起爬取
+    memory_limit = models.CharField('时间限制', max_length=50)
+    # 描述 富文本形式 summer_note 插件
     description = models.TextField('问题描述', max_length=30000)
+    # 输入描述 富文本形式 summer_note 插件
+    input_description = models.TextField('输入描述', max_length=10000, default='')
+    # 输出描述 富文本形式 summer_note 插件
+    output_description = models.TextField('输出描述', max_length=10000, default='')
+    # 输入内容
+    input = models.TextField('输入', max_length=10000, default='')
+    # 输出内容
+    output = models.TextField('输出', max_length=10000, default='')
+
     # hint
     hint = models.CharField('备注', blank=True, default="", max_length=256)
     # 创建时间
     create_time = models.DateTimeField('创建时间', auto_now_add=True)
     # 创建者
     create_by = models.ForeignKey(MyUser)
-    # 最后更新时间 不适用auto_now 因为本model里有会变化的临时变量var #
+    # 最后更新时间
     last_update_time = models.DateTimeField('最后更新时间', blank=True, null=True, auto_now=True)
     # 标签
-    tags = models.ManyToManyField(ProblemTag)
+    tags = models.ManyToManyField(ProblemTag, blank=True)
     # 是否可见
     visible = models.BooleanField(default=True)
 
@@ -125,6 +138,7 @@ class Problem(models.Model):
 
     class Meta:
         db_table = "problem"
+        unique_together = ('oj', 'oj_id')
         ordering = ['oj', 'oj_id']
 
     def __str__(self):

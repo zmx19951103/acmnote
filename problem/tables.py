@@ -29,9 +29,9 @@ class ProblemTable(Table):
     difficulty_rank = Column(field='difficulty_rank', header=u'难度等级', header_attrs={'width': '13%'})
     difficulty_num = Column(field='difficulty_num', header=u'平均指数', header_attrs={'width': '13%'})
 
-
     class Meta:
         model = Problem
         search = True
         search_placeholder = 'search'
         pagination = True
+        ajax = True

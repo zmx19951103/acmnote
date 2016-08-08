@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'', include('note.urls')),
 
     # test for myself table columns
+    url(r'^table/', include('table.urls')),
 ]
 
 if settings.DEBUG:

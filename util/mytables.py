@@ -4,6 +4,23 @@ from django.utils.safestring import mark_safe
 from django.utils.html import escape
 
 from table.utils import Accessor
+from table.columns import Column
+from django.utils import timezone
+
+
+class MyDateTimeColumn(Column):
+
+    DEFAULT_FORMAT = "%Y-%m-%d %H:%I:%S"
+
+    def __init__(self, field, header=None, format=None, **kwargs):
+        self.format = format or MyDateTimeColumn.DEFAULT_FORMAT
+        super(MyDateTimeColumn, self).__init__(field, header, **kwargs)
+
+    def render(self, obj):
+        datetime = Accessor(self.field).resolve(obj)
+        datetime = timezone.localtime(datetime)
+        text = datetime.strftime(self.format)
+        return escape(text)
 
 
 class MyLink(object):

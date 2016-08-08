@@ -1,5 +1,41 @@
 <div class="problem-section">
-    {% autoescape off %}
-        {{problem.description}}
-    {% endautoescape %}
+    <div class="panel panel-info">
+        <div class="panel-heading">问题描述</div>
+            <div class="panel-body">
+            {% autoescape off %}
+                {{problem.description}}
+            {% endautoescape %}
+            </div>
+        <div class="panel-heading">输入描述</div>
+            <div class="panel-body">
+            {% autoescape off %}
+                {{problem.input_description}}
+            {% endautoescape %}
+            </div>
+        <div class="panel-heading">输出描述</div>
+            <div class="panel-body">
+            {% autoescape off %}
+                {{problem.output_description}}
+            {% endautoescape %}
+            </div>
+        <div class="panel-heading">输入</div>
+            <div class="panel-body">
+            {% autoescape off %}
+                {{problem.input}}
+            {% endautoescape %}
+            </div>
+        <div class="panel-heading">输出</div>
+            <div class="panel-body">
+            {% autoescape off %}
+                {{problem.output}}
+            {% endautoescape %}
+            </div>
+        <div class="panel-heading">Hint</div>
+            <div class="panel-body">
+            {% autoescape off %}
+                {{problem.hint}}
+            {% endautoescape %}
+            </div>
+    </div>
+
 </div>

@@ -77,7 +77,7 @@ class ClassicNote(AbstractNote):
     # 难度系数 1-10
     ac_time = models.DateTimeField(blank=True, null=True)
     difficulty = models.IntegerField(blank=True, null=True)
-    tags = models.ManyToManyField(NoteTag)
+    tags = models.ManyToManyField(NoteTag, blank=True)
 
     @property
     def get_tags(self):
