@@ -41,7 +41,7 @@
                     <ul class="list-group">
                         {% for item in tags %}
                             <li class="list-group-item problem-tag">
-                            <a class="tag-link" href="/problems/?tag={{ item.name }}">{{ item.name }}</a>
+                            <a class="tag-link" id="tag-link" href="#">{{ item.name }}</a>
                             <span class="badge">{{ item.problem_number }}</span>
                             </li>
                         {% endfor %}
@@ -52,6 +52,12 @@
         </div>
     </div>
 <script>
+    $(function(){
+        $("#tag-link").bind('click',function() {
+            var table = $('#problemtable').DataTable();;
+            table.search("*"+$(this).html()).draw();
+        });
+    })
     $("tr:odd").css("background-color","#E9F1F6");//class为odd的行设置颜色
     $("tr:even").css("background-color","#ffffff");//class为even的行设置颜色
 </script>

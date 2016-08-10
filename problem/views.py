@@ -2,12 +2,56 @@
 from django.shortcuts import render
 from .models import Problem, ProblemTag
 from django.http import Http404
-from .tables import ProblemTable
 from note.models import ClassicNote
 from authentication.models import MyUser
 from django.db.models import Q, Count
 # Create your views here.
-from django.http import HttpResponse, HttpResponseNotFound
+from table.views import FeedDataView
+from problem.tables import ProblemTable
+from functools import reduce
+
+
+class MyDataView(FeedDataView):
+    token = ProblemTable.token
+
+    def get_queryset(self, **kwargs):
+        return super(MyDataView, self).get_queryset().filter(visible=True)
+
+    def filter_queryset(self, queryset):
+        def get_filter_arguments(filter_target):
+            """
+            Get `Q` object passed to `filter` function.
+            """
+            queries = []
+            fields = [col.field for col in self.columns if col.searchable]
+            value = filter_target
+            # 暂时的解决办法
+            if value:
+                if value[0] == '*':
+                    value = value[1:]
+                    queries.append(Q(**{"tags__name__contains": value}))
+                    queries.append(Q(**{"tags__abbreviation__contains": value}))
+                    reduce(lambda x, y: x | y, queries)
+
+            for field in fields:
+                if field:
+                    if isinstance(field, set):
+                        for sub_field in field:
+                            key = "__".join(sub_field.split(".") + ["contains"])
+                            queries.append(Q(**{key: value}))
+                    else:
+                        key = "__".join(field.split(".") + ["contains"])
+                        queries.append(Q(**{key: value}))
+                else:
+                    raise NameError
+
+            return reduce(lambda x, y: x | y, queries)
+
+        filter_text = self.query_data["sSearch"]
+        if filter_text:
+            for target in filter_text.split():
+                queryset = queryset.filter(get_filter_arguments(target))
+        return queryset
 
 
 def problem_list_page(request):
@@ -15,20 +59,11 @@ def problem_list_page(request):
     前台的问题列表
     """
     # 正常情况
-    problem = Problem.objects.filter(visible=True)
-    tag_text = request.GET.get("tag", None)
-    tag = None
-    if tag_text:
-        try:
-            tag = ProblemTag.objects.get(name=tag_text)
-        except ProblemTag.DoesNotExist:
-            raise Http404(u"标签不存在")
-        problem = tag.problem_set.all().filter(visible=True)
-    problems = ProblemTable(problem)
+    problems = ProblemTable()
     tags = ProblemTag.objects.annotate(problem_number=Count("problem")).filter(problem_number__gt=0).order_by(
         "-problem_number")
     return render(request, 'problem/problem_list.html',
-                  {'problem': problems, 'tags': tags, 'tag': tag})
+                  {'problem': problems, 'tags': tags})
 
 
 def problem_page(request, problem_id):

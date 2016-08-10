@@ -70,6 +70,8 @@ MIDDLEWARE_CLASSES = [
 
     'django.contrib.sessions.middleware.SessionMiddleware',
 
+    'acmnote2.middleware.TimezoneMiddleware',
+
 ]
 
 ROOT_URLCONF = 'acmnote2.urls'
