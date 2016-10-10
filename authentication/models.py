@@ -4,6 +4,10 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import User
 
+REGULAR_USER = 0
+ADMIN = 1
+SUPER_ADMIN = 2
+
 
 class MyUser(models.Model):
     # 对应到一个User

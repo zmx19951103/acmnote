@@ -18,7 +18,7 @@ def manager_check(user):
         return False
 
 
-def super_manger_check(user):
+def super_manager_check(user):
     if user.is_authenticated():
         return user.myuser.admin_type >= 2
     else:

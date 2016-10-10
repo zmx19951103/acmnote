@@ -1,9 +1,7 @@
-from django.shortcuts import render
-
-# Create your views here.
+# -*- coding: utf-8 -*-
 from django.shortcuts import render
 from .models import Announcement
-from util.verification import super_manger_check
+
 from util.shortcuts import error_page
 
 

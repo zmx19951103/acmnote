@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'problem',
     'announcement',
     'note',
+    'group',
     'util',
 
     'django_summernote',  # 富文本编辑器
@@ -51,6 +52,8 @@ INSTALLED_APPS = [
     'datetimewidget',  # 日期输入部件
 
     'bootstrap3',
+
+    'fontawesome',
 
     'django.contrib.humanize',
 
