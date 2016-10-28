@@ -1,11 +1,9 @@
 from acmnote2.wsgi import *
-from authentication.models import MyUser
-from problem.models import Problem
-from django.contrib.auth.models import User
 from util.importproblem import *
+from util.models import OJ
 
 
-def main():
+def test():
     user = User.objects.get_by_natural_key('xjw')
     my_user = MyUser.objects.get(user=user)
 
@@ -31,6 +29,68 @@ def main():
         )
         print(str(pid)+" : success!")
 
+
+def init():
+    oj = [('codeforces', 1), ('poj', 1000), ('hdu', 1000)]
+    for name, max_id in oj:
+        noj = OJ.objects.get_or_create(name=name, max_problem_id=max_id)
+        print(noj.name)
+
+
+def update_cf(up_id=None):
+    name = 'codeforces'
+    oj = OJ.objects.get(name=name)
+    max_id = oj.max_problem_id
+    res = True
+    while res:
+        res = import_cf(max_id, 'A')
+        if not res:
+            break
+        chr_id = ord('A')+1
+        while import_cf(max_id, chr(chr_id)):
+            chr_id += 1
+        max_id += 1
+        if up_id and up_id <= max_id:
+            break
+    oj.max_problem_id = max_id
+    oj.save()
+
+
+def update_poj(up_id=None):
+    name = 'poj'
+    oj = OJ.objects.get(name=name)
+    max_id = oj.max_problem_id
+    res = True
+    while res:
+        res = import_poj(max_id)
+        if not res:
+            break
+        max_id += 1
+        if up_id and up_id <= max_id:
+            break
+    oj.max_problem_id = max_id
+    oj.save()
+
+
+def update_hdu(up_id=None):
+    name = 'hdu'
+    oj = OJ.objects.get(name=name)
+    max_id = oj.max_problem_id
+    res = True
+    while res:
+        res = import_hdu(max_id)
+        if not res:
+            break
+        max_id += 1
+        if up_id and up_id <= max_id:
+            break
+    oj.max_problem_id = max_id
+    oj.save()
+
+
 if __name__ == '__main__':
-    main()
+    # init()
+    # update_poj(1121)
+    # update_hdu(1100)
+    update_cf(20)
     print("Done!")

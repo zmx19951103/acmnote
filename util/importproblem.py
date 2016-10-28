@@ -2,6 +2,9 @@
 import requests
 import re
 import urllib.request
+from django.contrib.auth.models import User
+from authentication.models import MyUser
+from problem.models import Problem
 
 
 # 杭电oj编码方式为gb2312，需要用urllib读取后解码  需要用gbk解码 坑啊
@@ -12,9 +15,13 @@ def get_hdu_info(problem_id):
     html = requests.get(url).text
 
     if 'No such problem' in html:
-        return str(problem_id)+' : No such problem'
+        ots = str(problem_id)+' : No such problem'
+        print(ots)
+        return False
     if 'System Message' in html:
-        return str(problem_id)+' : System error'
+        ots = str(problem_id) + ' : System error'
+        print(ots)
+        return False
 
     response = urllib.request.urlopen(url)
     html = response.read().decode('gbk')
@@ -61,7 +68,7 @@ def get_hdu_info(problem_id):
                 description[i] = description[i].replace("/data/images/", base_img_url + "data/images/")
     return {'title': title, 'time_limit': time_limit, 'memory_limit': memory_limit,
             'description': description[0], 'input_description': description[1],
-            'output_description': description[2], 'input': description[3], 'output': description[4]}
+            'output_description': description[2], 'input': [description[3]], 'output': [description[4]]}
 
 
 def get_poj_info(problem_id):
@@ -70,9 +77,13 @@ def get_poj_info(problem_id):
     html = requests.get(url).text
 
     if 'Can not find problem' in html:
-        return str(problem_id) + ' : Can not find problem'
+        ots = str(problem_id) + ' : Can not find problem'
+        print(ots)
+        return False
     if 'Error Occurred' in html:
-        return str(problem_id) + ' : Error Occurred'
+        ots = str(problem_id) + ' : Error Occurred'
+        print(ots)
+        return False
 
     reg_title = '<div class="ptt" lang="en-US">(.*?)</div>'
     title = re.findall(reg_title, html, re.S)[0]
@@ -93,4 +104,131 @@ def get_poj_info(problem_id):
 
     return {'title': title, 'time_limit': time_limit, 'memory_limit': memory_limit,
             'description': description[0], 'input_description': description[1],
-            'output_description': description[2], 'input': in_out[0], 'output': in_out[1]}
+            'output_description': description[2], 'input': [in_out[0]], 'output': [in_out[1]]}
+
+
+def get_cf_info(problem_id, problem_c):
+    problem_id = str(problem_id)
+    problem_c = str(problem_c)
+    base_url = 'http://codeforces.com/problemset/problem/'
+    url = base_url + problem_id + "/" + problem_c
+    html = requests.get(url).text
+    io = 'No such problem'
+    # print(html)
+    if io in html:
+        print(io + ":" + problem_id + problem_c)
+        return False
+
+    reg_title = '<div class="title">(.*?)</div>'
+    title = re.findall(reg_title, html, re.S)[0]
+    title = title[3:]
+
+    reg_time_limit = "time limit per test</div>(.*?)</div>"
+    time_limit = re.findall(reg_time_limit, html, re.S)[0]
+
+    reg_memory_limit = "memory limit per test</div>(.*?)</div>"
+    memory_limit = re.findall(reg_memory_limit, html, re.S)[0]
+
+    reg_description = 'output</div>(?:.+)</div></div>(.*?)<div class="input-specification">'
+    description = re.findall(reg_description, html, re.S)[0]
+
+    reg_input_description = '<div class="section-title">Input</div>(.*?)</div>'
+    input_description = re.findall(reg_input_description, html, re.S)[0]
+
+    reg_output_description = '<div class="section-title">Output</div>(.*?)</div>'
+    output_description = re.findall(reg_output_description, html, re.S)[0]
+
+    reg_input = '<div class="title">Input</div>(.*?)</div>'
+    inputs = re.findall(reg_input, html, re.S)
+    # print(inputs)
+
+    reg_out = '<div class="title">Output</div>(.*?)</div>'
+    outputs = re.findall(reg_out, html, re.S)
+    # print(outputs)
+    # print(len(inputs))
+
+    return {'title': title, 'time_limit': time_limit, 'memory_limit': memory_limit,
+            'description': description, 'input_description': input_description,
+            'output_description': output_description, 'input': inputs, 'output': outputs}
+
+
+def import_cf(problem_id, problem_c):
+    oj_name = 'codeforces'
+    res = get_cf_info(problem_id, problem_c)
+    if not res:
+        return False
+    user = User.objects.get_by_natural_key('xjw')
+    my_user = MyUser.objects.get(user=user)
+    pid = str(problem_id)+str(problem_c)
+    Problem.objects.update_or_create(
+        oj=oj_name,
+        oj_id=pid,
+        defaults={'title': res['title'],
+                  'time_limit': res['time_limit'],
+                  'memory_limit': res['memory_limit'],
+                  'description': res['description'],
+                  'input_description': res['input_description'],
+                  'output_description': res['output_description'],
+                  'input': res['input'],
+                  'output': res['output'],
+                  'create_by': my_user,
+                  'hint': '导入功能测试'
+                  },
+    )
+    print(oj_name + pid + " : success!")
+    return True
+
+
+def import_hdu(problem_id):
+    oj_name = 'hdu'
+    res = get_hdu_info(problem_id)
+    if not res:
+        return False
+    user = User.objects.get_by_natural_key('xjw')
+    my_user = MyUser.objects.get(user=user)
+    pid = str(problem_id)
+    Problem.objects.update_or_create(
+        oj=oj_name,
+        oj_id=pid,
+        defaults={'title': res['title'],
+                  'time_limit': res['time_limit'],
+                  'memory_limit': res['memory_limit'],
+                  'description': res['description'],
+                  'input_description': res['input_description'],
+                  'output_description': res['output_description'],
+                  'input': res['input'],
+                  'output': res['output'],
+                  'create_by': my_user,
+                  'hint': '导入功能测试'
+                  },
+    )
+    print(oj_name + pid + " : success!")
+    return True
+
+
+def import_poj(problem_id):
+    oj_name = 'poj'
+    res = get_poj_info(problem_id)
+    if not res:
+        return False
+    user = User.objects.get_by_natural_key('xjw')
+    my_user = MyUser.objects.get(user=user)
+    pid = str(problem_id)
+    Problem.objects.update_or_create(
+        oj=oj_name,
+        oj_id=pid,
+        defaults={'title': res['title'],
+                  'time_limit': res['time_limit'],
+                  'memory_limit': res['memory_limit'],
+                  'description': res['description'],
+                  'input_description': res['input_description'],
+                  'output_description': res['output_description'],
+                  'input': res['input'],
+                  'output': res['output'],
+                  'create_by': my_user,
+                  'hint': '导入功能测试'
+                  },
+    )
+    print(oj_name + pid + " : success!")
+    return True
+

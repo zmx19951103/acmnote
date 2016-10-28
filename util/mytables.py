@@ -7,6 +7,7 @@ from table.utils import Accessor
 from table.columns import Column
 from django.utils import timezone
 
+
 class MyDateTimeColumn(Column):
 
     DEFAULT_FORMAT = "%Y-%m-%d %H:%I:%S"
@@ -17,9 +18,9 @@ class MyDateTimeColumn(Column):
 
     def render(self, obj):
         datetime = Accessor(self.field).resolve(obj)
-        #print(datetime)
+        # print(datetime)
         datetime = timezone.localtime(datetime)
-        #print(datetime)
+        # print(datetime)
         text = datetime.strftime(self.format)
         return escape(text)
 
